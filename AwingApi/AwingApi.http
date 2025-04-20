@@ -1,0 +1,6 @@
+@AwingApi_HostAddress = http://localhost:5125
+
+GET {{AwingApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
