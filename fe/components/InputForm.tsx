@@ -26,7 +26,14 @@ function InputForm({ reloadTable }: Props) {
       setValue("var_N", calParam.var_N);
       setValue("var_M", calParam.var_M);
       setValue("var_P", calParam.var_P);
-      setValue("matrix", calParam.matrix);
+      setValue(
+        "matrix",
+        calParam.matrix
+          ?.replaceAll("],[", "\n")
+          .replaceAll("]]", "")
+          .replaceAll("[[", "")
+          .replaceAll(",", " ")
+      );
     },
     [calParam]
   );
@@ -36,14 +43,19 @@ function InputForm({ reloadTable }: Props) {
   }, []);
 
   const onSubmit = (data: any) => {
+    setErrorMsg("");
     const matrixInput = [];
     // validate
+    if (data.var_P > data.var_N * data.var_M) {
+      setErrorMsg("P need <= N*M");
+      return;
+    }
     const matrixRows = data.matrix.split("\n");
     if (matrixRows.length != data.var_N) {
       setErrorMsg("So row phai bang N");
       return;
     }
-
+    let allNumber: string[] = [];
     for (let i = 0; i < matrixRows.length; i++) {
       const arr = matrixRows[i].trim().split(" ");
       console.log(arr);
@@ -52,17 +64,35 @@ function InputForm({ reloadTable }: Props) {
         return;
       }
       matrixInput.push(arr);
+      allNumber = allNumber.concat(arr);
+    }
+    for (let j = 1; j <= data.var_P; j++) {
+      if (allNumber.indexOf(j.toString()) < 0) {
+        setErrorMsg("Matrix need to exist value " + j);
+        return;
+      }
+    }
+    const maxValues = allNumber.filter(
+      (x) => x.toString() == data.var_P.toString()
+    );
+
+    if (maxValues.length != 1) {
+      setErrorMsg(
+        "Matrix need to exist value " + data.var_P + " only one times"
+      );
+      return;
     }
 
     console.log("matrixInput: ", matrixInput);
-    setErrorMsg("");
-    data.P = data.var_P as number;
+
     const params = {
       P: 123,
       matrix: matrixInput, // data.matrix,
     };
+
     console.log(data);
     console.log(params);
+
     API.post(`Calculator/Calculate`, params)
       .then((res) => {
         console.log("res");
@@ -229,9 +259,7 @@ function InputForm({ reloadTable }: Props) {
         <Button type="submit" variant="contained" color="primary">
           Submit
         </Button>
-        <Button variant="outlined" disabled color="success">
-          Result: {result}
-        </Button>
+        <b color="success">Result: {result}</b>
       </div>
     </form>
   );

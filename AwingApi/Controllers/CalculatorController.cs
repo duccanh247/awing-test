@@ -1,6 +1,8 @@
-﻿using AwingApi.Models.Request;
+﻿using AwingApi.Entities;
+using AwingApi.Models.Request;
 using AwingApi.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace AwingApi.Controllers
 {
@@ -27,6 +29,23 @@ namespace AwingApi.Controllers
         {
             var rs = await _calculatorService.Calculate(request);
             return Ok(rs);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddLogSample()
+        {
+            CalculationLog log = new CalculationLog()
+            {
+                Var_N = 3,
+                Var_M = 3,
+                Var_P = 5,
+                Result = 13 ,
+                Matrix = "[[3,2,3],[1,2,4],[5,1,1]]",
+                CreateAt = DateTime.Now,
+            };
+             await _calculatorService.AddLog(log);
+            return Ok("Add successfully");
         }
     }
 }
