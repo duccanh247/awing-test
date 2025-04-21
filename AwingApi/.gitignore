@@ -1,0 +1,69 @@
+﻿# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# NuGet
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/packages/repositories.config
+
+# Microsoft Azure Web App publish settings
+PublishProfiles/
+
+# Azure Functions
+azurefunctions/
+
+# Local History
+.localhistory/
+
+# OS generated files
+[Tt]humbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Logs
+*.log
+
+# Visual Studio 2015/2017 cache/options directory
+.vscode/
+
+# Visual Studio 2019 cache/options directory
+.vscode/
+
+# Node.js
+node_modules/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# StyleCop
+StyleCopReport.xml
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+
+# Coverlet
+coverage.opencover.xml
+coverage.json
+
+# IDEs
+.idea/

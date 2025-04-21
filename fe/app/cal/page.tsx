@@ -17,15 +17,15 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-const rows: HistoryCal[] = [
-  { var_N: 3, var_M: 4, var_P: 25, matrix: "john@example.com", result: 123 },
-  { var_N: 3, var_M: 3, var_P: 30, matrix: "jane@example.com", result: 44 },
-  { var_N: 2, var_M: 3, var_P: 28, matrix: "alice@example.com", result: 22 },
-];
+// const rows: HistoryCal[] = [
+//   { var_N: 3, var_M: 4, var_P: 25, matrix: "john@example.com", result: 123 },
+//   { var_N: 3, var_M: 3, var_P: 30, matrix: "jane@example.com", result: 44 },
+//   { var_N: 2, var_M: 3, var_P: 28, matrix: "alice@example.com", result: 22 },
+// ];
 
 export default function Cal() {
   const { setCalParam } = useCalStore();
-  const [calLogs, setCalLog] = useState<HistoryCal[]>(rows);
+  const [calLogs, setCalLog] = useState<HistoryCal[]>([]);
   const handleRowClick = (row: HistoryCal) => {
     setCalParam(row);
     console.log("Clicked row:", row);

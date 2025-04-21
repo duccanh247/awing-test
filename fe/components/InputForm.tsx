@@ -36,11 +36,30 @@ function InputForm({ reloadTable }: Props) {
   }, []);
 
   const onSubmit = (data: any) => {
+    const matrixInput = [];
+    // validate
+    const matrixRows = data.matrix.split("\n");
+    if (matrixRows.length != data.var_N) {
+      setErrorMsg("So row phai bang N");
+      return;
+    }
+
+    for (let i = 0; i < matrixRows.length; i++) {
+      const arr = matrixRows[i].trim().split(" ");
+      console.log(arr);
+      if (arr.length != data.var_M) {
+        setErrorMsg("So Cot phai bang M: " + matrixRows[i]);
+        return;
+      }
+      matrixInput.push(arr);
+    }
+
+    console.log("matrixInput: ", matrixInput);
     setErrorMsg("");
     data.P = data.var_P as number;
     const params = {
       P: 123,
-      matrix: data.matrix,
+      matrix: matrixInput, // data.matrix,
     };
     console.log(data);
     console.log(params);
@@ -177,6 +196,10 @@ function InputForm({ reloadTable }: Props) {
           defaultValue=""
           rules={{
             required: { value: true, message: "This field is required" },
+            pattern: {
+              value: /^[0-9\s\n]*$/,
+              message: "Chỉ được nhập số, dấu cách và dấu xuống dòng",
+            },
           }}
           render={({ field }) => (
             <>
