@@ -7,6 +7,6 @@ namespace AwingApi.Services
     {
         Task<List<CalculationLog>> GetLog();
         Task AddLog(CalculationLog log);
-        Task<float> Calculate(CalculateRequest request);
+        Task<double> Calculate(CalculateRequest request);
     }
 }

@@ -7,7 +7,7 @@
         public int Var_M { get; set; }
         public int Var_P { get; set; }
         public string Matrix { get; set; } = string.Empty;
-        public int Result { get; set; }
+        public double Result { get; set; }
         public DateTime CreateAt { get; set; }
     }
 }

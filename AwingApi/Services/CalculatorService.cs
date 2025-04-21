@@ -13,15 +13,58 @@ namespace AwingApi.Services
         {
             _dbContext = dbContext;
         }
-        public async Task<float> Calculate(CalculateRequest request)
+        public async Task<double> Calculate(CalculateRequest request)
         {
             // TODO something
+
+            // validate
+
+            // calculate
+            var allPositions = new List<NumberInfo>();
+            var allPositions1 = new Dictionary<(int, int), int>();
+
+
+            for (int i = 0; i< request.Matrix.Count; i++)
+            {
+                for (int j = 0; j < request.Matrix[i].Count; j++)
+                {
+                    var numberInfo = new NumberInfo()
+                    {
+                        X = i+1, Y = j + 1, Value = request.Matrix[i][j]
+                    };
+                    allPositions.Add(numberInfo);
+                    allPositions1.Add((i,j), request.Matrix[i][j]);
+                }
+            }
+
+            double dist = 0;
+            var currentPos = new NumberInfo() { X=0, Y=0, Value= allPositions1[(1, 1)] };
+            // TH p = n*m
+            if (request.P == request.Matrix.Count * request.Matrix[0].Count) {
+                for(int i = 1; i<= request.P; i++)
+                {
+                    if(i==1 && allPositions1[(1,1)] == 1)
+                    {
+                        continue;
+                    }
+                    var pos = allPositions.First(x => x.Value == i);
+                    var dis = CalculateDistance(currentPos, pos);
+                    currentPos = pos;
+                    dist += dis;
+                }
+            }
+
+            //for(int k = 1; k <= request.P; k++)
+            //{
+
+            //}
+             
             CalculationLog log = new CalculationLog()
             {
                 Var_N = request.Matrix.Count,
                 Var_M = request.Matrix[0].Count,
                 Var_P = request.P,
-                Result = 111,
+                Result = dist,
                 Matrix = JsonSerializer.Serialize(request.Matrix),
                 CreateAt = DateTime.Now,
             };
@@ -39,5 +82,16 @@ namespace AwingApi.Services
             _dbContext.CalculationLog.Add(log);
             await _dbContext.SaveChangesAsync();
         }
+        public static double CalculateDistance(NumberInfo point1, NumberInfo point2)
+        {
+            return Math.Sqrt(Math.Pow(point1.X - point2.X, 2) + Math.Pow(point1.Y - point2.Y, 2));
+        }
+    }
+
+    public class NumberInfo
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Value { get; set; }
     }
 }
