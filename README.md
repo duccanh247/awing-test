@@ -33,3 +33,5 @@ Gồm 2 project
 		npm run dev
 
 	- Access http://localhost:3000/cal
+	
+- Note: Thuật toán để tìm đường ngắn nhất, em vẫn chưa tìm được, logic được dùng trong project chưa chính xác
