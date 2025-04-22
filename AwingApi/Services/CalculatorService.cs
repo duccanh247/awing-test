@@ -2,7 +2,6 @@
 using AwingApi.Models.Request;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace AwingApi.Services
 {
@@ -20,51 +19,83 @@ namespace AwingApi.Services
             // validate
 
             // calculate
+
             var allPositions = new List<NumberInfo>();
-            var allPositions1 = new Dictionary<(int, int), int>();
+            // var allPositions1 = new Dictionary<(int, int), int>();
 
 
-            for (int i = 0; i< request.Matrix.Count; i++)
+            for (int i = 0; i < request.Matrix.Count; i++)
             {
                 for (int j = 0; j < request.Matrix[i].Count; j++)
                 {
                     var numberInfo = new NumberInfo()
                     {
-                        X = i+1, Y = j + 1, Value = request.Matrix[i][j]
+                        X = i + 1,
+                        Y = j + 1,
+                        Value = request.Matrix[i][j]
                     };
                     allPositions.Add(numberInfo);
-                    allPositions1.Add((i,j), request.Matrix[i][j]);
+                    // allPositions1.Add((i, j), request.Matrix[i][j]);
                 }
             }
 
-            double dist = 0;
-            var currentPos = new NumberInfo() { X=0, Y=0, Value= allPositions1[(1, 1)] };
-            // TH p = n*m
-            if (request.P == request.Matrix.Count * request.Matrix[0].Count) {
-                for(int i = 1; i<= request.P; i++)
+            double totalDist = 0;
+            var firstPoint = allPositions.First(x => x.X == 1 && x.Y == 1);
+            var currentPos = new NumberInfo() { X = 1, Y = 1, Value = request.Matrix[0][0] };
+
+            // Truong hop p = n*m
+            if (request.P == request.Matrix.Count * request.Matrix[0].Count)
+            {
+                for (int i = 1; i <= request.P; i++)
                 {
-                    if(i==1 && allPositions1[(1,1)] == 1)
+                    if (i == 1 && firstPoint.Value == 1)
                     {
                         continue;
                     }
                     var pos = allPositions.First(x => x.Value == i);
                     var dis = CalculateDistance(currentPos, pos);
                     currentPos = pos;
-                    dist += dis;
+                    totalDist += dis;
                 }
             }
+            var endPos = allPositions.First(x => x.Value == request.P);
 
-            //for(int k = 1; k <= request.P; k++)
-            //{
+            // Truong hop khac
+            for (int k = 1; k <= request.P; k++)
+            {
+                if (k == 1 && firstPoint.Value == 1)
+                {
+                    continue;
+                }
+                var postionK = allPositions.Where(x => x.Value == k).ToList();
+                double minDis = 0;
+                NumberInfo selectPoint = currentPos;
+                foreach (NumberInfo point in postionK)
+                {
+                    var disC = CalculateDistance(point, currentPos);
+                    var disE = CalculateDistance(point, endPos);
+                    if (minDis == 0)
+                    {
+                        minDis = disC + disE;
+                        selectPoint = point;
+                    }
+                    if (minDis > 0 && (disC + disE) < minDis)
+                    {
+                        minDis = disC + disE;
+                        selectPoint = point;
+                    }
+                }
+                currentPos = selectPoint;
+                totalDist += minDis;
+                Console.WriteLine("Point: " + k + ", XY: " + selectPoint.X.ToString() + " " + selectPoint.Y.ToString());
+            }
 
-            //}
-             
             CalculationLog log = new CalculationLog()
             {
                 Var_N = request.Matrix.Count,
                 Var_M = request.Matrix[0].Count,
                 Var_P = request.P,
-                Result = dist,
+                Result = totalDist,
                 Matrix = JsonSerializer.Serialize(request.Matrix),
                 CreateAt = DateTime.Now,
             };

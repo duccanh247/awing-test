@@ -45,6 +45,7 @@ function InputForm({ reloadTable }: Props) {
   const onSubmit = (data: any) => {
     setErrorMsg("");
     const matrixInput = [];
+
     // validate
     if (data.var_P > data.var_N * data.var_M) {
       setErrorMsg("P need <= N*M");
@@ -55,6 +56,7 @@ function InputForm({ reloadTable }: Props) {
       setErrorMsg("So row phai bang N");
       return;
     }
+
     let allNumber: string[] = [];
     for (let i = 0; i < matrixRows.length; i++) {
       const arr = matrixRows[i].trim().split(" ");
@@ -83,10 +85,8 @@ function InputForm({ reloadTable }: Props) {
       return;
     }
 
-    console.log("matrixInput: ", matrixInput);
-
     const params = {
-      P: 123,
+      P: data.var_P,
       matrix: matrixInput, // data.matrix,
     };
 
@@ -259,7 +259,9 @@ function InputForm({ reloadTable }: Props) {
         <Button type="submit" variant="contained" color="primary">
           Submit
         </Button>
-        <b color="success">Result: {result}</b>
+        <b>
+          Result: <b className="text-green-600"> {result}</b>
+        </b>
       </div>
     </form>
   );
